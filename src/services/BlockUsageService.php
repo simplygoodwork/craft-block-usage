@@ -34,6 +34,8 @@ class BlockUsageService extends Component
         $allFields = Craft::$app->fields->getAllFields();
         $blockFields = array_filter($allFields, fn($i) => in_array($i->displayName(), ['Neo', 'Matrix']));
 
+        $_fields = [];
+
         foreach ($blockFields as $field) {
             $_fields[] = [
                 'id' => $field->id,
