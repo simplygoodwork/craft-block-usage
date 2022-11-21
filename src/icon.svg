@@ -16,7 +16,6 @@
         </filter>
     </defs>
     <g id="Block-Usage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect fill="#FFFFFF" x="0" y="0" width="512" height="512"></rect>
         <g id="Rectangle">
             <use fill="#DA561E" xlink:href="#path-2"></use>
             <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
