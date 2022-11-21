@@ -1,0 +1,100 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Block Usage plugin for Craft CMS 4.x
+ *
+ * Block Usage index.twig
+ *
+ * @author    Good Work
+ * @copyright Copyright (c) 2022 Good Work
+ * @link      https://simplygoodwork.com
+ * @package   BlockUsage
+ * @since     1.0.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+
+{% set title = "Block Usage" %}
+
+{% import "_includes/forms" as forms %}
+
+{% set fields = craft.blockUsage.getFields() %}
+
+{% set field = craft.app.fields.getFieldById(fieldId) %}
+{% set blockEntries = craft.blockUsage.getBlockEntries(fieldId, blockId) %}
+
+{% block sidebar %}
+    <nav>
+        <ul id="groups">
+            <li class="heading"><span>Fields</span></li>
+            {% for field in fields %}
+                <li><a href="{{ url("block-usage/fields/#{field.id}") }}"{% if fieldId is defined and fieldId == field.id %} class="sel"{% endif %}>{{ field.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
+
+
+{% set content %}
+    
+    <div style="display:flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="margin-bottom:0">
+                Block: {{ blockEntries.block.name }}
+            </h2>
+            <h3 style="margin-top:.5em">Field: {{ field.name }} ({{ field.displayName }})</h3>
+        </div>
+        <a href="{{ url("settings/fields/edit/#{field.id}") }}" class="btn edit icon"> {{ "Edit field"|t }}</a>
+    </div>
+
+    <hr>
+
+    {% set neoBlocksOwners = craft.neo.blocks({ typeId: blockId }).all()|map(b => b.ownerId) %}
+
+    {% if not blockEntries.entries|length %}
+
+      <p>No entries use this block</p>
+
+    {% else %}
+
+      <div id="fields-vue-admin-table" class="vue-admin-table">
+          <div class="tableview">
+              <div class="tablepane vue-admin-tablepane">
+                  <table class="vuetable data fullwidth">
+                      <thead>
+                          <tr>
+                              <th scope="col">{{ 'Entry ID'|t }}</th>
+                              <th scope="col">{{ 'Title'|t }}</th>
+                              <th scope="col">{{ 'Section'|t }}</th>
+                              <th scope="col">{{ 'Entry Type'|t }}</th>
+                          </tr>
+                      </thead>
+                      <tbody class="vuetable-body">
+                          {% for entry in blockEntries.entries %}
+
+                              <tr>
+                                  <td>{{ entry.id }}</td>
+                                  <td>
+                                      <a href="{{ entry.cpEditUrl() }}">{{ entry.title }}</a>
+                                  </td>
+                                  <td>
+                                    {{ entry.section.name }}
+                                  </td>
+                                  <td>
+                                    {{ entry.type.name }}
+                                  </td>
+                              </tr>
+                              
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+
+    {% endif %}
+    
+
+
+{% endset %}

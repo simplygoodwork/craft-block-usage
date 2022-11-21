@@ -1,0 +1,132 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Block Usage plugin for Craft CMS 4.x
+ *
+ * Block Usage index.twig
+ *
+ * @author    Good Work
+ * @copyright Copyright (c) 2022 Good Work
+ * @link      https://simplygoodwork.com
+ * @package   BlockUsage
+ * @since     1.0.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+
+{% set title = "Block Usage" %}
+
+{% import "_includes/forms" as forms %}
+
+{% set fields = craft.blockUsage.getFields() %}
+
+{% if fieldId is defined %}
+    {% set field = craft.app.fields.getFieldById(fieldId) %}
+    {% set blocks = craft.blockUsage.getCounts(fieldId) %}
+{% else %}
+  {% redirect url("block-usage/fields/#{fields[0].id}") %}
+{% endif %}
+
+
+
+{% block sidebar %}
+    <nav>
+        <ul id="groups">
+            <li class="heading"><span>Fields</span></li>
+            {% for field in fields %}
+                <li><a href="{{ url("block-usage/fields/#{field.id}") }}"{% if fieldId is defined and fieldId == field.id %} class="sel"{% endif %}>{{ field.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
+
+
+{% set content %}
+    
+    <div style="display:flex; justify-content: space-between; align-items: center;">
+        <div>
+        <h2 style="margin-bottom:0;">
+            Field: {{ field.name }}
+        </h2>
+        <h3 style="margin-top:.5em">Type: {{ field.displayName }} </h3>
+        </div>
+        <a href="{{ url("settings/fields/edit/#{field.id}") }}" class="btn edit icon"> {{ "Edit field"|t }}</a>
+    </div>
+
+    <hr>
+
+    {% if blockId is not defined %}
+
+        <div id="fields-vue-admin-table" class="vue-admin-table">
+            <div class="tableview">
+                <div class="tablepane vue-admin-tablepane">
+                    <table class="vuetable data fullwidth">
+                        <thead>
+                            <tr>
+                                <th scope="col">{{ 'Block Name'|t }}</th>
+                                <th scope="col">{{ 'No of entries used on'|t }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="vuetable-body">
+                            {% for b in blocks ?? [] %}
+
+                                <tr >
+                                    <td>
+                                        <a href="{{ url("block-usage/fields/#{field.id}/#{b.id}") }}">{{ b.name }}</a>
+                                    </td>
+                                    <td>{{ b.count }}</td>
+                                </tr>
+                                {% if b.children is defined %}
+                                    {% for child in b.children %}
+                                        <tr>
+                                            <td style="display:flex; align-items: center;">
+                                                <span style="margin-right: .4em; color: #555">
+                                                    <svg style="width: 12px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                                    </svg>
+                                                </span>
+                                                <a href="{{ url("block-usage/fields/#{field.id}/#{b.id}") }}">{{ child.name }}</a>
+                                            </td>
+                                            <td>{{ child.count }}</td>
+                                        </tr> 
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        
+        <div id="fields-vue-admin-table" class="vue-admin-table">
+            <div class="tableview">
+                <div class="tablepane vue-admin-tablepane">
+                    <table class="vuetable data fullwidth">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="padding-right:3em">{{ 'Entry ID'|t }}</th>
+                                <th scope="col" style="width:100%">{{ 'Title'|t }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="vuetable-body">
+                            {% for entry in entries %}
+
+                                <tr>
+                                    <td>{{ entry.id }}</td>
+                                    <td>
+                                        <a href="{{ entry.cpEditUrl() }}">{{ entry.title }}</a>
+                                    </td>
+                                </tr>
+                                
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endset %}
