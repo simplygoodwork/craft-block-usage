@@ -1,44 +1,44 @@
 {
-    "name": "simplygoodwork/craft-block-usage",
-    "description": "See how Matrix and Neo blocks are being used across your sections.",
-    "type": "craft-plugin",
-    "version": "1.0.0",
-    "keywords": [
-        "craft",
-        "cms",
-        "craftcms",
-        "craft-plugin",
-        "block usage"
-    ],
-    "support": {
-        "docs": "https://github.com/simplygoodwork/craft-block-usage/blob/master/README.md",
-        "issues": "https://github.com/simplygoodwork/craft-block-usage/issues"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Good Work",
-            "homepage": "https://simplygoodwork.com"
-        }
-    ],
-    "require": {
-        "craftcms/cms": "^4.0.0"
-    },
-    "autoload": {
-        "psr-4": {
-          "simplygoodwork\\blockusage\\": "src/"
-        }
-    },
-    "extra": {
-        "name": "Block Usage",
-        "handle": "block-usage",
-        "developer": "Good Work",
-        "developerUrl": "https://simplygoodwork.com",
-        "documentationUrl": "https://github.com/simplygoodwork/craft-block-usage/blob/master/README.md",
-        "changelogUrl": "https://raw.githubusercontent.com/simplygoodwork/craft-block-usage/master/CHANGELOG.md",
-        "components": {
-            "blockUsageService": "simplygoodwork\\blockusage\\services\\BlockUsageService"
-        },
-        "class": "simplygoodwork\\blockusage\\BlockUsage"
+  "name": "simplygoodwork/craft-block-usage",
+  "description": "See how Matrix and Neo blocks are being used across your sections.",
+  "type": "craft-plugin",
+  "version": "1.0.1",
+  "keywords": [
+    "craft",
+    "cms",
+    "craftcms",
+    "craft-plugin",
+    "block usage"
+  ],
+  "support": {
+    "docs": "https://github.com/simplygoodwork/craft-block-usage/blob/master/README.md",
+    "issues": "https://github.com/simplygoodwork/craft-block-usage/issues"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Good Work",
+      "homepage": "https://simplygoodwork.com"
     }
+  ],
+  "require": {
+    "craftcms/cms": "^4.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "simplygoodwork\\blockusage\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Block Usage",
+    "handle": "block-usage",
+    "developer": "Good Work",
+    "developerUrl": "https://simplygoodwork.com",
+    "documentationUrl": "https://github.com/simplygoodwork/craft-block-usage/blob/master/README.md",
+    "changelogUrl": "https://raw.githubusercontent.com/simplygoodwork/craft-block-usage/master/CHANGELOG.md",
+    "components": {
+      "blockUsageService": "simplygoodwork\\blockusage\\services\\BlockUsageService"
+    },
+    "class": "simplygoodwork\\blockusage\\BlockUsage"
+  }
 }

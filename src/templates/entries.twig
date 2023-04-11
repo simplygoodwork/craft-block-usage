@@ -50,8 +50,6 @@
 
     <hr>
 
-    {% set neoBlocksOwners = craft.neo.blocks({ typeId: blockId }).all()|map(b => b.ownerId) %}
-
     {% if not blockEntries.entries|length %}
 
       <p>No entries use this block</p>
