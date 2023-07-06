@@ -139,7 +139,7 @@ class BlockUsageService extends Component
             $childBlock = \benf\neo\Plugin::$plugin->blockTypes->getByHandle($child);
 
             if ($childBlock->childBlocks) {
-                $output = $this->_getNeoChildBlocks($childBlock->childBlocks, $output);
+                $output = $this->_getNeoChildBlocks($fieldHandle, $childBlock->childBlocks, $output);
             }
             else {
 
