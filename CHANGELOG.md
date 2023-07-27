@@ -1,5 +1,11 @@
 # Block Usage Changelog
 
+## 1.0.2 - 2023-07-27
+
+### Fixed
+
+- Fixed bug preventing Neo blocks from working with more than 2 levels. [Closes #2](https://github.com/simplygoodwork/craft-block-usage/issues/2)
+
 ## 1.0.1 - 2023-03-11
 
 ### Fixed
