@@ -57,29 +57,20 @@ class BlockUsageService extends Component
             // Loop over top level Block Types
             /** @var $block BlockType */
             foreach ($field->getBlockTypes() as $block) {
-                // Check it's top level
-                if ($block->topLevel) {
-  
-                    $children = [];
-                    if ($block->childBlocks) {
-                        $children = $this->_getNeoChildBlocks($field->handle, $block->childBlocks);
-                    }
 
-                    $count = Entry::find()
-                        ->neoCriteria($field->handle, [
-                            'type' => $block->handle,
-                        ])
-                        ->count();
-
+                $count = Entry::find()
+                    ->neoCriteria($field->handle, [
+                        'type' => $block->handle,
+                    ])
+                    ->count();
     
-                    $_blocks[] = [
-                        'id' => $block->id,
-                        'handle' => $block->handle,
-                        'name' => $block->name,
-                        'children' => $children,
-                        'count' => $count,
-                    ];
-                }
+                $_blocks[] = [
+                    'id' => $block->id,
+                    'handle' => $block->handle,
+                    'name' => $block->name,
+                    'count' => $count,
+                    'notTopLevel' => !$block->topLevel,
+                ];
             }
         }
   
@@ -131,33 +122,5 @@ class BlockUsageService extends Component
         $ret['entries'] = $entries;
                 
         return $ret;
-    }
-
-    private function _getNeoChildBlocks(string $fieldHandle, array $children, $output = []): array {
-
-        foreach( $children as $child) {
-            $childBlock = \benf\neo\Plugin::$plugin->blockTypes->getByHandle($child);
-
-            if ($childBlock->childBlocks) {
-                $output = $this->_getNeoChildBlocks($fieldHandle, $childBlock->childBlocks, $output);
-            }
-            else {
-
-                $count = Entry::find()
-                    ->neoCriteria($fieldHandle, [
-                        'type' => $childBlock->handle,
-                    ])
-                    ->count();
-                    
-                $output[$child] = [
-                    'id' => $childBlock->id,
-                    'handle' => $childBlock->handle,
-                    'name' => $childBlock->name,
-                    'count' => $count
-                ];
-            }
-        }
-
-        return $output;
     }
 }
