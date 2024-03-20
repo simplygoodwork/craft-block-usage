@@ -80,28 +80,17 @@
                             </thead>
                             <tbody class="vuetable-body">
                                 {% for b in blocks ?? [] %}
+                                    {% set linkStyle = '' %}
+                                    {% if b.notTopLevel is defined and b.notTopLevel %}
+                                        {% set linkStyle = 'margin-left: 1em;' %}
+                                    {% endif %}
 
                                     <tr >
                                         <td>
-                                            <a href="{{ url("block-usage/fields/#{field.id}/#{b.id}") }}">{{ b.name }}</a>
+                                            <a style="{{linkStyle}}" href="{{ url("block-usage/fields/#{field.id}/#{b.id}") }}">{{ b.name }}</a>
                                         </td>
                                         <td>{{ b.count }}</td>
                                     </tr>
-                                    {% if b.children is defined %}
-                                        {% for child in b.children %}
-                                            <tr>
-                                                <td style="display:flex; align-items: center;">
-                                                    <span style="margin-right: .4em; color: #555">
-                                                        <svg style="width: 12px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                                                        </svg>
-                                                    </span>
-                                                    <a href="{{ url("block-usage/fields/#{field.id}/#{b.id}") }}">{{ child.name }}</a>
-                                                </td>
-                                                <td>{{ child.count }}</td>
-                                            </tr> 
-                                        {% endfor %}
-                                    {% endif %}
                                 {% endfor %}
                             </tbody>
                         </table>
