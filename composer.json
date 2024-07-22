@@ -2,7 +2,7 @@
   "name": "simplygoodwork/craft-block-usage",
   "description": "See how Matrix and Neo blocks are being used across your sections.",
   "type": "craft-plugin",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "keywords": [
     "craft",
     "cms",
@@ -22,7 +22,7 @@
     }
   ],
   "require": {
-    "craftcms/cms": "^4.0.0"
+    "craftcms/cms": "^5.0.0"
   },
   "autoload": {
     "psr-4": {
@@ -40,5 +40,16 @@
       "blockUsageService": "simplygoodwork\\blockusage\\services\\BlockUsageService"
     },
     "class": "simplygoodwork\\blockusage\\BlockUsage"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require-dev": {
+    "craftcms/rector": "dev-main"
   }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Block Usage plugin for Craft CMS 4.x
+ * Block Usage plugin for Craft CMS 5.x
  *
  * Block Usage index.twig
  *
@@ -26,10 +26,20 @@ class BlockUsageVariable
     {
         return BlockUsage::getInstance()->blockUsageService->getCounts($fieldId);
     }
- 
+
     public function getBlockEntries($fieldId, $blockId): array
     {
         return BlockUsage::getInstance()->blockUsageService->getBlockEntries($fieldId, $blockId);
+    }
+
+    public function getEntryTypeEntries($entryId): array
+    {
+        return BlockUsage::getInstance()->blockUsageService->getEntryTypeEntries($entryId);
+    }
+
+    public function getEntryTypes($fieldId): array
+    {
+        return BlockUsage::getInstance()->blockUsageService->getEntryTypes($fieldId);
     }
 
 }

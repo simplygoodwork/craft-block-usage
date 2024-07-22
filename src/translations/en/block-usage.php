@@ -1,6 +1,6 @@
 <?php
 /**
- * Block Usage plugin for Craft CMS 4.x
+ * Block Usage plugin for Craft CMS 5.x
  *
  * See how Matrix and Neo blocks are being used across your sections.
  *

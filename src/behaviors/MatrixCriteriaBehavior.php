@@ -8,6 +8,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\elements\MatrixBlock;
 use craft\events\CancelableEvent;
 
+use craft\records\EntryType;
 use yii\base\Behavior;
 
 /**
@@ -90,7 +91,7 @@ class MatrixCriteriaBehavior extends Behavior
             return;
         }
         // Set up the matrix block query
-        $matrixQuery = MatrixBlock::find();
+        $matrixQuery = EntryType::find();
         // Mix in any criteria for the matrix block query
         Craft::configure($matrixQuery, $this->matrixCriteria);
         // Get the ids of the elements that contain matrix blocks that match the matrix block query

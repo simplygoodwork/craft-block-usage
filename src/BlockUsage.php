@@ -1,6 +1,6 @@
 <?php
 /**
- * Block Usage plugin for Craft CMS 4.x
+ * Block Usage plugin for Craft CMS 5.x
  *
  * See how Matrix and Neo blocks are being used across your sections.
  *
@@ -99,15 +99,15 @@ class BlockUsage extends Plugin
         );
 
         // Add the MatrixCriteriaBehavior behavior to ElementQuery objects
-        Event::on(
-            ElementQuery::class,
-            ElementQuery::EVENT_DEFINE_BEHAVIORS,
-            function(DefineBehaviorsEvent $event) {
-                $event->sender->attachBehaviors([
-                    MatrixCriteriaBehavior::class,
-                ]);
-            }
-        );
+//        Event::on(
+//            ElementQuery::class,
+//            ElementQuery::EVENT_DEFINE_BEHAVIORS,
+//            function(DefineBehaviorsEvent $event) {
+//                $event->sender->attachBehaviors([
+//                    MatrixCriteriaBehavior::class,
+//                ]);
+//            }
+//        );
 
         // Add the NeoCriteriaBehavior behavior to ElementQuery objects
         Event::on(
@@ -138,5 +138,5 @@ class BlockUsage extends Plugin
 
     // Protected Methods
     // =========================================================================
-    
+
 }

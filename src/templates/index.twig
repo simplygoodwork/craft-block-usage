@@ -1,7 +1,7 @@
 {# @var craft \craft\web\twig\variables\CraftVariable #}
 {#
 /**
- * Block Usage plugin for Craft CMS 4.x
+ * Block Usage plugin for Craft CMS 5.x
  *
  * Block Usage index.twig
  *
@@ -24,6 +24,7 @@
 {% if fields|length %}
     {% if fieldId is defined %}
         {% set field = craft.app.fields.getFieldById(fieldId) %}
+{#        Matrix fields no longer have "blocks" but now just Entry Types #}
         {% set blocks = craft.blockUsage.getCounts(fieldId) %}
     {% else %}
     {% redirect url("block-usage/fields/#{fields[0].id}") %}
@@ -45,15 +46,15 @@
 {% endblock %}
 
 {% set content %}
-        
+
     {% if not fields|length %}
-        
+
         <p>
             You have no Matrix or Neo fields
         </p>
 
     {% else %}
-        
+
         <div style="display:flex; justify-content: space-between; align-items: center;">
             <div>
             <h2 style="margin-bottom:0;">
@@ -67,14 +68,18 @@
         <hr>
 
         {% if blockId is not defined %}
-
             <div id="fields-vue-admin-table" class="vue-admin-table">
                 <div class="tableview">
                     <div class="tablepane vue-admin-tablepane">
                         <table class="vuetable data fullwidth">
                             <thead>
                                 <tr>
-                                    <th scope="col">{{ 'Block Name'|t }}</th>
+                                    {% if 'Matrix' in className(field) %}
+                                        <th scope="col">{{ 'Field Layout Name'|t }}</th>
+                                    {% else %}
+                                        <th scope="col">{{ 'Block Name'|t }}</th>
+                                    {% endif %}
+
                                     <th scope="col">{{ 'No of entries used on'|t }}</th>
                                 </tr>
                             </thead>
@@ -87,7 +92,7 @@
 
                                     <tr >
                                         <td>
-                                            <a style="{{linkStyle}}" href="{{ url("block-usage/fields/#{field.id}/#{b.id}") }}">{{ b.name }}</a>
+                                            <a class="{{ b.color }}" style="{{linkStyle}}" href="{{ url("block-usage/fields/#{field.id}/#{b.id}") }}">{{ b.name|raw }}</a>
                                         </td>
                                         <td>{{ b.count }}</td>
                                     </tr>
@@ -99,7 +104,7 @@
             </div>
 
         {% else %}
-            
+
             <div id="fields-vue-admin-table" class="vue-admin-table">
                 <div class="tableview">
                     <div class="tablepane vue-admin-tablepane">
@@ -119,7 +124,7 @@
                                             <a href="{{ entry.cpEditUrl() }}">{{ entry.title }}</a>
                                         </td>
                                     </tr>
-                                    
+
                                 {% endfor %}
                             </tbody>
                         </table>

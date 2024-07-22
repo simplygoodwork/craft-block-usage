@@ -1,7 +1,7 @@
 {# @var craft \craft\web\twig\variables\CraftVariable #}
 {#
 /**
- * Block Usage plugin for Craft CMS 4.x
+ * Block Usage plugin for Craft CMS 5.x
  *
  * Block Usage index.twig
  *
@@ -22,7 +22,14 @@
 {% set fields = craft.blockUsage.getFields() %}
 
 {% set field = craft.app.fields.getFieldById(fieldId) %}
-{% set blockEntries = craft.blockUsage.getBlockEntries(fieldId, blockId) %}
+{% set ownerReference = "Block" %}
+{% if "neo" in className(field) %}
+    {% set blockEntries = craft.blockUsage.getBlockEntries(fieldId, blockId) %}
+{% elseif "Matrix" in className(field) %}
+    {% set ownerReference = "Entry Type" %}
+    {% set blockEntries = craft.blockUsage.getEntryTypeEntries(fieldId, blockId) %}
+{% endif %}
+
 
 {% block sidebar %}
     <nav>
@@ -37,11 +44,11 @@
 
 
 {% set content %}
-    
+
     <div style="display:flex; justify-content: space-between; align-items: center;">
         <div>
-            <h2 style="margin-bottom:0">
-                Block: {{ blockEntries.block.name }}
+            <h2 class="flex" style="margin-bottom:0">
+                {{ ownerReference }}: {{ blockEntries.block.name|raw }}
             </h2>
             <h3 style="margin-top:.5em">Field: {{ field.name }} ({{ field.displayName }})</h3>
         </div>
@@ -83,7 +90,7 @@
                                     {{ entry.type.name }}
                                   </td>
                               </tr>
-                              
+
                           {% endfor %}
                       </tbody>
                   </table>
@@ -92,7 +99,7 @@
       </div>
 
     {% endif %}
-    
+
 
 
 {% endset %}
