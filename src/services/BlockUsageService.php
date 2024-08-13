@@ -59,6 +59,7 @@ class BlockUsageService extends Component
             foreach ($field->getBlockTypes() as $block) {
 
                 $count = Entry::find()
+                    ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
                     ->neoCriteria($field->handle, [
                         'type' => $block->handle,
                     ])
@@ -80,6 +81,7 @@ class BlockUsageService extends Component
             foreach ($field->getBlockTypes() as $block) {
 
                 $count = Entry::find()
+                    ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
                     ->matrixCriteria($field->handle, [
                         'type' => $block->handle,
                     ])
@@ -105,6 +107,7 @@ class BlockUsageService extends Component
 
         if ($field->displayName() == 'Neo') {
             $entries = Entry::find()
+                ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
                 ->neoCriteria($field->handle, [
                     'type' => $block->handle,
                 ])
@@ -112,6 +115,7 @@ class BlockUsageService extends Component
         }
         elseif ($field->displayName() == 'Matrix') {
             $entries = Entry::find()
+                ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
                 ->matrixCriteria($field->handle, [
                     'type' => $block->handle,
                 ])
