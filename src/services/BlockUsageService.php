@@ -62,6 +62,7 @@ class BlockUsageService extends Component
                     ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
                     ->neoCriteria($field->handle, [
                         'type' => $block->handle,
+                        'site' => Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle,
                     ])
                     ->count();
     
@@ -84,6 +85,7 @@ class BlockUsageService extends Component
                     ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
                     ->matrixCriteria($field->handle, [
                         'type' => $block->handle,
+                        'site' => Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle,
                     ])
                     ->count();
 
@@ -110,6 +112,7 @@ class BlockUsageService extends Component
                 ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
                 ->neoCriteria($field->handle, [
                     'type' => $block->handle,
+                    'site' => Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle,
                 ])
                 ->all();
         }
@@ -118,6 +121,7 @@ class BlockUsageService extends Component
                 ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
                 ->matrixCriteria($field->handle, [
                     'type' => $block->handle,
+                    'site' => Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle,
                 ])
                 ->all();
         }    
