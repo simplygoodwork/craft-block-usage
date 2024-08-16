@@ -32,9 +32,9 @@ class BlockUsageVariable
         return BlockUsage::getInstance()->blockUsageService->getBlockEntries($fieldId, $blockId);
     }
 
-    public function getEntryTypeEntries($entryId): array
+    public function getEntryTypeEntries($entryId, $blockId): array
     {
-        return BlockUsage::getInstance()->blockUsageService->getEntryTypeEntries($entryId);
+        return BlockUsage::getInstance()->blockUsageService->getEntryTypeEntries($entryId, $blockId);
     }
 
     public function getEntryTypes($fieldId): array

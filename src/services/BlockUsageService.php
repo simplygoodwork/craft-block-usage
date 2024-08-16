@@ -156,28 +156,41 @@ class BlockUsageService extends Component
         return $ret;
     }
 
-    public function getEntryTypeEntries(int $entryTypeId)
+    public function getEntryTypeEntries(int $fieldId, int $entryTypeId)
     {
-        $entryType = Craft::$app->getEntries()->getEntryTypeById($entryTypeId);
+        $entryType = Craft::$app->getEntries()->getEntryTypeById($entryTypeId) ?? Craft::$app->getEntries()->getEntryTypeById($fieldId);
 
-        $entries = Entry::find()->typeId($entryTypeId)->status(null)->collect();
+        if(!$entryType) {
+            return [
+                'block' => [
+                    'name' => '',
+                ],
+                'entries' => []
+            ];
+        }
 
-        $topLevelEntries = $entries->map(function($entry){
-            try {
-                $owner = $entry->getOwner();
+        $entries = Entry::find()->typeId($entryType->id)->status(null)->collect();
 
-                if($owner) {
-                    while($owner->getOwner()) {
-                        $owner = $owner->getOwner();
+        $topLevelEntries = $entries
+            ->filter(function($entry) use ($fieldId){
+                return $entry->fieldId === $fieldId;
+            })
+            ->map(function($entry){
+                try {
+                    $owner = $entry->getOwner();
+                    if($owner) {
+                        while($owner->getOwner()) {
+                            $owner = $owner->getOwner();
+                        }
                     }
+
+
+                    return $owner ?? $entry;
+                } catch(Exception $e) {
+                    return $entry;
                 }
-
-
-                return $owner ?? $entry;
-            } catch(Exception $e) {
-                return $entry;
-            }
-        })->unique();
+            })
+            ->unique();
 
         $labelHtml = $this->_getEntryTypeLabel($entryType);
         return [
