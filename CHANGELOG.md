@@ -1,5 +1,10 @@
 # Block Usage Changelog
 
+## 1.0.3 - 2024-08-16
+
+### Added
+- Added multisite support. [PR #11](https://github.com/simplygoodwork/craft-block-usage/pull/11) (Thanks @niektenhoopen!)
+
 ## 1.0.2 - 2023-07-27
 
 ### Fixed
