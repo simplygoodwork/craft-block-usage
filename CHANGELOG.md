@@ -1,5 +1,10 @@
 # Block Usage Changelog
 
+## 2.0.1 - 2023-08-16
+### Fixed 
+- Fixed error that occurred when clicking a Matrix field's Entry Type.
+- Clicking a Matrix field's Entry Type now only shows usage where the entry type is used in that particular field. 
+
 ## 1.0.2 - 2023-07-27
 
 ### Fixed

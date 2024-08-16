@@ -2,7 +2,7 @@
   "name": "simplygoodwork/craft-block-usage",
   "description": "See how Matrix and Neo blocks are being used across your sections.",
   "type": "craft-plugin",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "keywords": [
     "craft",
     "cms",
