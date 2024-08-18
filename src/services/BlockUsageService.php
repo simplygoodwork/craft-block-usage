@@ -105,7 +105,10 @@ class BlockUsageService extends Component
 
             foreach($field->getEntryTypes() as $entryType)
             {
-                $entries = Entry::find()->typeId($entryType->id)->status(null)->collect();
+                $entries = Entry::find()
+                    ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
+                    ->typeId($entryType->id)
+                    ->collect();
 
                 $topLevelEntries = $entries->map(function($entry){
                     try {
@@ -118,7 +121,7 @@ class BlockUsageService extends Component
                     } catch(Exception $e) {
                         return $entry;
                     }
-                })->unique();
+                })->unique('canonicalId');
 
                 $labelHtml = $this->_getEntryTypeLabel($entryType);
                 $_blocks[] = [
@@ -169,7 +172,11 @@ class BlockUsageService extends Component
             ];
         }
 
-        $entries = Entry::find()->typeId($entryType->id)->status(null)->collect();
+        $entries = Entry::find()
+            ->site(Craft::$app->request->get('site') ?? Craft::$app->sites->primarySite->handle)
+            ->typeId($entryType->id)
+            ->status(null)
+            ->collect();
 
         $topLevelEntries = $entries
             ->filter(function($entry) use ($fieldId){
@@ -190,7 +197,7 @@ class BlockUsageService extends Component
                     return $entry;
                 }
             })
-            ->unique();
+            ->unique('canonicalId');
 
         $labelHtml = $this->_getEntryTypeLabel($entryType);
         return [
