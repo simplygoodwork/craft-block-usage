@@ -109,7 +109,11 @@ class BlockUsageService extends Component
 
                 $topLevelEntries = $entries->map(function($entry){
                     try {
+                        // Trashed entries don't have an owner
                         $owner = $entry->getOwner();
+                        if ($owner === null) {
+                            return $entry;
+                        }
                         while($owner->getOwner()) {
                             $owner = $owner->getOwner();
                         }
