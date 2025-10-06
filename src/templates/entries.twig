@@ -77,20 +77,20 @@
                       </thead>
                       <tbody class="vuetable-body">
                           {% for entry in blockEntries.entries %}
-
-                              <tr>
-                                  <td>{{ entry.id }}</td>
-                                  <td>
-                                      <a href="{{ entry.cpEditUrl() }}">{{ entry.title }}</a>
-                                  </td>
-                                  <td>
-                                    {{ entry.section.name }}
-                                  </td>
-                                  <td>
-                                    {{ entry.type.name }}
-                                  </td>
-                              </tr>
-
+                              {% if entry.section and entry.type %}
+                                  <tr>
+                                      <td>{{ entry.id }}</td>
+                                      <td>
+                                          <a href="{{ entry.cpEditUrl() }}">{{ entry.title }}</a>
+                                      </td>
+                                      <td>
+                                        {{ entry.section.name }}
+                                      </td>
+                                      <td>
+                                        {{ entry.type.name }}
+                                      </td>
+                                  </tr>
+                              {% endif %}
                           {% endfor %}
                       </tbody>
                   </table>
