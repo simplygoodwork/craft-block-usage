@@ -11,13 +11,14 @@
 namespace simplygoodwork\blockusage\services;
 
 use craft\base\Field;
+use craft\db\Query;
+use craft\db\Table;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\helpers\ElementHelper;
 use craft\helpers\UrlHelper;
 use craft\models\EntryType;
 use craft\models\Section;
 use craft\services\ElementSources;
-use Exception;
 use craft\models\FieldLayout;
 use Craft;
 use craft\base\Component;
@@ -106,21 +107,8 @@ class BlockUsageService extends Component
 
             foreach($field->getEntryTypes() as $entryType)
             {
-                $entries = Entry::find()->typeId($entryType->id)->status(null)->site($this->_site)->collect();
-
-                $topLevelEntries = $entries->map(function($entry){
-                    try {
-                        $owner = $entry->getOwner();
-                        if($owner){
-                            while($owner->getOwner()) {
-                                $owner = $owner->getOwner();
-                            }
-                        }
-                        return $owner;
-                    } catch(Exception $e) {
-                        return $entry;
-                    }
-                })->unique();
+                $entryIds = Entry::find()->typeId($entryType->id)->status(null)->site($this->_site)->ids();
+                $rootOwnerIds = $this->_findRootOwnerIds($entryIds);
 
                 $labelHtml = $this->_getEntryTypeLabel($entryType);
                 $_blocks[] = [
@@ -128,7 +116,7 @@ class BlockUsageService extends Component
                     'handle' => $entryType->handle,
                     'color' => $entryType->color->value ?? null,
                     'name' => $labelHtml,
-                    'count' => $topLevelEntries->count(),
+                    'count' => count($rootOwnerIds),
                 ];
             }
         }
@@ -172,35 +160,18 @@ class BlockUsageService extends Component
             ];
         }
 
-        $entries = Entry::find()->typeId($entryType->id)->status(null)->site($this->_site)->collect();
-
-        $topLevelEntries = $entries
-            ->filter(function($entry) use ($fieldId){
-                return $entry->fieldId === $fieldId;
-            })
-            ->map(function($entry){
-                try {
-                    $owner = $entry->getOwner();
-                    if($owner) {
-                        while($owner->getOwner()) {
-                            $owner = $owner->getOwner();
-                        }
-                    }
-
-
-                    return $owner ?? $entry;
-                } catch(Exception $e) {
-                    return $entry;
-                }
-            })
-            ->unique();
+        $entryIds = Entry::find()->typeId($entryType->id)->fieldId($fieldId)->status(null)->site($this->_site)->ids();
+        $rootOwnerIds = $this->_findRootOwnerIds($entryIds);
+        $topLevelEntries = !empty($rootOwnerIds)
+            ? Entry::find()->id($rootOwnerIds)->status(null)->site($this->_site)->all()
+            : [];
 
         $labelHtml = $this->_getEntryTypeLabel($entryType);
         return [
             'block' => [
                 'name' => $labelHtml,
             ],
-            'entries' => $topLevelEntries->all()
+            'entries' => $topLevelEntries,
         ];
     }
 
@@ -332,6 +303,50 @@ class BlockUsageService extends Component
 
         return $query->getRawSql();
 
+    }
+
+    /**
+     * Traverses the elements_owners table upward from a set of entry IDs,
+     * returning the IDs of the root (non-nested) owners. Uses batch DB queries
+     * instead of getOwner() to avoid Craft's eager-loading cascade.
+     */
+    private function _findRootOwnerIds(array $entryIds): array
+    {
+        if (empty($entryIds)) {
+            return [];
+        }
+
+        $rootIds = [];
+        $currentIds = $entryIds;
+        $visited = array_flip($entryIds);
+
+        while (!empty($currentIds)) {
+            // Single batch query: find owners for all current IDs at once
+            $ownerMap = (new Query())
+                ->select(['elementId', 'ownerId'])
+                ->from(Table::ELEMENTS_OWNERS)
+                ->where(['elementId' => $currentIds])
+                ->pairs();
+
+            $nextIds = [];
+            foreach ($currentIds as $id) {
+                if (!isset($ownerMap[$id])) {
+                    // No row in elements_owners = this is a root (section) entry
+                    $rootIds[] = $id;
+                } else {
+                    $ownerId = (int)$ownerMap[$id];
+                    if (!isset($visited[$ownerId])) {
+                        $visited[$ownerId] = true;
+                        $nextIds[] = $ownerId;
+                    }
+                    // Already visited = cycle or already queued; skip
+                }
+            }
+
+            $currentIds = $nextIds;
+        }
+
+        return array_unique($rootIds);
     }
 
     private function _getEntryTypeLabel(EntryType $entryType)
