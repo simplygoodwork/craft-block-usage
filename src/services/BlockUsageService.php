@@ -111,10 +111,11 @@ class BlockUsageService extends Component
                 $topLevelEntries = $entries->map(function($entry){
                     try {
                         $owner = $entry->getOwner();
-                        while($owner->getOwner()) {
-                            $owner = $owner->getOwner();
+                        if($owner){
+                            while($owner->getOwner()) {
+                                $owner = $owner->getOwner();
+                            }
                         }
-
                         return $owner;
                     } catch(Exception $e) {
                         return $entry;
