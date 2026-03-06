@@ -1,5 +1,8 @@
 # Block Usage Changelog
 
+## 2.0.4 - 2026-03-06
+- Fixes recursive OOM issue when finding usages of Matrix fields
+
 ## 2.0.3 - 2026-03-06
 - Fixes issue with top level Matrix fields
 
