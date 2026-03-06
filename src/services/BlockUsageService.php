@@ -11,19 +11,13 @@
 namespace simplygoodwork\blockusage\services;
 
 use craft\base\Field;
-use craft\db\Query;
 use craft\elements\conditions\ElementConditionInterface;
-use craft\elements\conditions\entries\EntryCondition;
-use craft\fields\conditions\EmptyFieldConditionRule;
 use craft\helpers\ElementHelper;
-use craft\helpers\Json;
-use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\models\EntryType;
 use craft\models\Section;
 use craft\services\ElementSources;
 use Exception;
-use simplygoodwork\blockusage\BlockUsage;
 use craft\models\FieldLayout;
 use Craft;
 use craft\base\Component;
@@ -38,7 +32,6 @@ use craft\base\Iconic;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Cp;
 use craft\helpers\Html;
-use yii\db\Expression;
 use function array_filter;
 
 /**
@@ -48,6 +41,13 @@ use function array_filter;
  */
 class BlockUsageService extends Component
 {
+    private string $_site;
+
+    public function __construct()
+    {
+        $this->_site = Craft::$app->getRequest()->getQueryParam('site', 'default');
+        parent::__construct();
+    }
     // Public Methods
     // =========================================================================
 
@@ -87,6 +87,7 @@ class BlockUsageService extends Component
                     ->neoCriteria($field->handle, [
                         'type' => $block->handle,
                     ])
+                    ->site($this->_site)
                     ->count();
 
                 $_blocks[] = [
@@ -105,7 +106,7 @@ class BlockUsageService extends Component
 
             foreach($field->getEntryTypes() as $entryType)
             {
-                $entries = Entry::find()->typeId($entryType->id)->status(null)->collect();
+                $entries = Entry::find()->typeId($entryType->id)->status(null)->site($this->_site)->collect();
 
                 $topLevelEntries = $entries->map(function($entry){
                     try {
@@ -144,6 +145,7 @@ class BlockUsageService extends Component
                 ->neoCriteria($field->handle, [
                     'type' => $block->handle,
                 ])
+                ->site($this->_site)
                 ->all();
         }
         elseif ($field->displayName() == 'Matrix') {
@@ -169,7 +171,7 @@ class BlockUsageService extends Component
             ];
         }
 
-        $entries = Entry::find()->typeId($entryType->id)->status(null)->collect();
+        $entries = Entry::find()->typeId($entryType->id)->status(null)->site($this->_site)->collect();
 
         $topLevelEntries = $entries
             ->filter(function($entry) use ($fieldId){
