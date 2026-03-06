@@ -1,5 +1,8 @@
 # Block Usage Changelog
 
+## 2.0.2 - 2026-03-06
+- Adds support for multisite installs.
+
 ## 2.0.1 - 2023-08-16
 ### Fixed 
 - Fixed error that occurred when clicking a Matrix field's Entry Type.
