@@ -31,6 +31,37 @@
     {% endif %}
 {% endif %}
 
+{% set showSiteMenu = (craft.app.getIsMultiSite() ? (showSiteMenu ?? 'auto') : false) %}
+
+{% if showSiteMenu %}
+    {% if selectableSites is not defined %}
+        {% if siteIds is defined %}
+            {% set selectableSites = craft.app.sites.getEditableSites()|filter(s => s.id in siteIds) %}
+        {% else %}
+            {% set selectableSites = craft.app.sites.getEditableSites() %}
+        {% endif %}
+    {% endif %}
+
+    {% if selectedSite is not defined %}
+        {% if selectedSiteId is defined %}
+            {% set selectedSite = craft.app.sites.getSiteById(selectedSiteId) %}
+        {% elseif requestedSite and requestedSite in selectableSites %}
+            {% set selectedSite = requestedSite %}
+        {% else %}
+            {% set selectedSite = selectableSites|length ? selectableSites|first : craft.app.sites.getPrimarySite() %}
+        {% endif %}
+    {% endif %}
+
+    {% set crumbs = (crumbs ?? [])|unshift({
+        id: 'site-crumb',
+        icon: 'world',
+        label: selectedSite.name|t('site'),
+        menu: {
+            items: siteMenuItems(selectableSites, selectedSite),
+            label: 'Select site'|t('app')
+        }
+    }) %}
+{% endif %}
 
 {% block sidebar %}
     {% if fields|length %}
